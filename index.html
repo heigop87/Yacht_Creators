@@ -1,0 +1,2375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Focus 3X Configurator · YachtCreators · YachtWay</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #000000;
+    --paper: #FFFFFF;
+    --paper-tint: #F6F4EF;
+    --rule-soft: #D9D6CE;
+    --muted: #6E6A62;
+    --muted-soft: #9C968A;
+    --red: #C8102E;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--ink);
+    background: var(--paper);
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    font-style: normal;
+  }
+
+  /* Display typeface: Paroque with Helvetica Neue fallback */
+  .display {
+    font-family: 'Paroque', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-style: normal;
+  }
+
+  /* Top bar */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--paper);
+    border-bottom: 1px solid var(--ink);
+  }
+  .topbar-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 18px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .brand-lockup {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .yw-mark {
+    font-family: 'Paroque', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 500;
+    font-size: 20px;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .dealer-chip {
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--muted);
+    padding-left: 18px;
+    border-left: 1px solid var(--rule-soft);
+  }
+  .dealer-chip strong { color: var(--ink); font-weight: 500; }
+  .config-meta {
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .config-meta strong { color: var(--ink); font-weight: 500; }
+  .status-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--red);
+    display: inline-block;
+    margin-right: 10px;
+  }
+
+  /* Banner */
+  .welcome-banner {
+    background: var(--paper-tint);
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .welcome-banner-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 14px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    font-size: 13px;
+    color: var(--ink);
+  }
+  .welcome-banner-inner .lead {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 14px;
+  }
+  .banner-eyebrow {
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--red);
+    font-weight: 500;
+  }
+  .banner-close {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    padding: 4px 10px;
+    font-size: 20px;
+    line-height: 1;
+  }
+  .banner-close:hover { color: var(--ink); }
+
+  /* Anchor nav */
+  .anchor-nav {
+    position: sticky;
+    top: 71px;
+    z-index: 40;
+    background: var(--paper);
+    border-bottom: 1px solid var(--rule-soft);
+    overflow-x: auto;
+  }
+  .anchor-nav-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 12px 32px;
+    display: flex;
+    gap: 28px;
+    white-space: nowrap;
+  }
+  .anchor-nav a {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 140ms;
+  }
+  .anchor-nav a:hover { color: var(--red); }
+
+  /* Page */
+  .page {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 40px 32px 120px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 360px;
+    gap: 48px;
+    align-items: start;
+  }
+  @media (max-width: 1024px) {
+    .page { grid-template-columns: 1fr; padding: 24px 20px 160px; gap: 28px; }
+  }
+
+  /* Hero */
+  .hero {
+    padding: 48px 0 36px;
+    margin-bottom: 48px;
+    border-top: 2px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+  }
+  .hero-row-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 32px;
+    margin-bottom: 40px;
+  }
+  .hero-eyebrow {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+  .hero-title {
+    font-family: 'Paroque', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 300;
+    font-size: 128px;
+    line-height: 0.9;
+    letter-spacing: -0.05em;
+    margin: 0;
+    color: var(--ink);
+  }
+  .hero-sub {
+    font-size: 17px;
+    font-weight: 400;
+    max-width: 520px;
+    color: var(--ink);
+    margin: 28px 0 0;
+    line-height: 1.5;
+  }
+  .hero-standout {
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .hero-standout .num {
+    font-family: 'Paroque', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 300;
+    font-size: 156px;
+    line-height: 0.85;
+    color: var(--red);
+    letter-spacing: -0.06em;
+  }
+  .hero-standout .lbl {
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+    margin-top: 14px;
+  }
+  @media (max-width: 720px) {
+    .hero-title { font-size: 64px; letter-spacing: -0.04em; }
+    .hero-standout .num { font-size: 88px; }
+    .hero-row-top { flex-direction: column-reverse; }
+    .hero-standout { text-align: left; }
+  }
+
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0,1fr));
+    gap: 0;
+    border-top: 1px solid var(--ink);
+  }
+  @media (max-width: 720px) {
+    .hero-stats { grid-template-columns: repeat(2, 1fr); }
+  }
+  .hero-stat {
+    padding: 20px 24px 20px 0;
+    border-right: 1px solid var(--rule-soft);
+  }
+  .hero-stat:last-child { border-right: none; }
+  .hero-stat .label {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .hero-stat .value {
+    font-family: 'Paroque', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 26px;
+    font-weight: 400;
+    color: var(--ink);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .hero-stat .value .unit {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    color: var(--muted);
+    margin-left: 6px;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  /* Sections */
+  .section {
+    margin-bottom: 48px;
+    border-top: 2px solid var(--ink);
+  }
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 24px 0 20px;
+    border-bottom: 1px solid var(--ink);
+    gap: 24px;
+  }
+  .section-head h2 {
+    font-family: 'Paroque', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    font-size: 36px;
+    letter-spacing: -0.03em;
+    margin: 0;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .section-eyebrow {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .section-eyebrow strong { color: var(--ink); font-weight: 500; }
+
+  /* Option rows */
+  .opt {
+    display: grid;
+    grid-template-columns: 20px 1fr auto;
+    gap: 24px;
+    align-items: flex-start;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--rule-soft);
+    cursor: pointer;
+    transition: background 100ms ease;
+  }
+  .opt:hover { background: var(--paper-tint); }
+  .opt.included { cursor: default; }
+  .opt.included:hover { background: transparent; }
+
+  .check {
+    width: 16px; height: 16px;
+    border: 1px solid var(--ink);
+    border-radius: 0;
+    background: var(--paper);
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 4px;
+    flex-shrink: 0;
+    transition: background 120ms;
+  }
+  .opt.selected .check { background: var(--ink); }
+  .opt.selected .check::after {
+    content: "";
+    width: 5px; height: 8px;
+    border: solid var(--paper);
+    border-width: 0 1.5px 1.5px 0;
+    transform: rotate(45deg) translate(-1px, -1px);
+  }
+  .opt.included .check {
+    background: var(--ink);
+    border-color: var(--ink);
+  }
+  .opt.included .check::after {
+    content: "";
+    width: 5px; height: 8px;
+    border: solid var(--paper);
+    border-width: 0 1.5px 1.5px 0;
+    transform: rotate(45deg) translate(-1px, -1px);
+  }
+  .check.radio { border-radius: 50%; }
+  .opt.selected .check.radio {
+    background: var(--paper);
+  }
+  .opt.selected .check.radio::after {
+    content: "";
+    width: 8px; height: 8px;
+    background: var(--ink);
+    border-radius: 50%;
+    border: none;
+    transform: none;
+  }
+
+  .opt-main { min-width: 0; }
+  .opt-title {
+    font-weight: 500;
+    font-size: 15px;
+    color: var(--ink);
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+  .opt-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.55;
+    font-weight: 400;
+  }
+  .opt-tags {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+  .tag {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 0;
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--ink);
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .tag-qty { color: var(--muted); border-color: var(--rule-soft); }
+  .tag-delivery {
+    color: var(--red);
+    border-color: var(--red);
+  }
+  .tag-included {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .tag-quote {
+    background: var(--red);
+    color: var(--paper);
+    border-color: var(--red);
+  }
+  .opt-note {
+    font-size: 13px;
+    color: var(--ink);
+    margin-top: 12px;
+    line-height: 1.55;
+    padding: 10px 14px;
+    background: var(--paper-tint);
+    border-left: 2px solid var(--red);
+    font-weight: 400;
+  }
+
+  .opt-right {
+    text-align: right;
+    flex-shrink: 0;
+    min-width: 120px;
+  }
+  .price {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: 0;
+    font-variant-numeric: tabular-nums;
+  }
+  .price.positive::before { content: "+"; color: var(--muted); font-weight: 400; }
+  .price.included-label {
+    color: var(--ink);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .qty-ctrl {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--ink);
+    border-radius: 0;
+    margin-top: 12px;
+    overflow: hidden;
+    background: var(--paper);
+  }
+  .qty-ctrl button {
+    width: 28px; height: 28px;
+    background: var(--paper);
+    border: none;
+    font-size: 15px;
+    color: var(--ink);
+    cursor: pointer;
+    font-weight: 500;
+  }
+  .qty-ctrl button:hover { background: var(--ink); color: var(--paper); }
+  .qty-ctrl button:disabled { color: var(--muted-soft); cursor: not-allowed; }
+  .qty-ctrl button:disabled:hover { background: var(--paper); color: var(--muted-soft); }
+  .qty-ctrl .qty {
+    font-size: 13px;
+    width: 32px;
+    text-align: center;
+    color: var(--ink);
+    font-weight: 500;
+    border-left: 1px solid var(--ink);
+    border-right: 1px solid var(--ink);
+    padding: 6px 0;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Standard equipment */
+  .std-eq { padding: 24px 0; }
+  .std-eq-intro {
+    font-size: 14px;
+    color: var(--ink);
+    margin: 0 0 24px;
+    max-width: 640px;
+    line-height: 1.55;
+  }
+  .std-eq-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    gap: 0 48px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  @media (max-width: 640px) {
+    .std-eq-list { grid-template-columns: 1fr; }
+  }
+  .std-eq-list li {
+    font-size: 13px;
+    color: var(--ink);
+    padding: 10px 0;
+    border-bottom: 1px solid var(--rule-soft);
+    font-weight: 400;
+    line-height: 1.5;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .std-eq-list li::after {
+    content: "included";
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+
+  /* Delivery package */
+  .delivery-pkg {
+    margin: 8px 0 32px;
+    padding: 24px 0;
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 32px;
+  }
+  @media (max-width: 640px) {
+    .delivery-pkg { grid-template-columns: 1fr; gap: 14px; }
+  }
+  .delivery-pkg-title {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .delivery-pkg-body {
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.55;
+  }
+
+  /* Custom options and notes */
+  .custom-list {
+    padding: 24px 0;
+  }
+  .custom-list-empty {
+    font-size: 13px;
+    color: var(--muted);
+    padding: 14px 0;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .custom-item {
+    display: grid;
+    grid-template-columns: 20px 1fr auto;
+    gap: 24px;
+    align-items: flex-start;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .custom-item .bullet {
+    width: 16px; height: 16px;
+    border: 1px solid var(--ink);
+    background: var(--ink);
+    margin-top: 4px;
+  }
+  .custom-item-title {
+    font-weight: 500;
+    font-size: 15px;
+    color: var(--ink);
+    line-height: 1.4;
+  }
+  .custom-item-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.55;
+    margin-top: 4px;
+  }
+  .custom-remove {
+    background: transparent;
+    border: 1px solid var(--ink);
+    color: var(--ink);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: background 140ms, color 140ms;
+  }
+  .custom-remove:hover {
+    background: var(--red);
+    border-color: var(--red);
+    color: var(--paper);
+  }
+
+  .custom-add {
+    padding: 20px 0 24px;
+    border-top: 1px solid var(--rule-soft);
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 12px;
+    align-items: start;
+  }
+  @media (max-width: 640px) {
+    .custom-add { grid-template-columns: 1fr; }
+  }
+  .custom-add input {
+    width: 100%;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    padding: 12px 14px;
+    background: var(--paper);
+    border: 1px solid var(--ink);
+    border-radius: 0;
+    color: var(--ink);
+  }
+  .custom-add input:focus {
+    outline: none;
+    border-color: var(--red);
+  }
+
+  .notes-area {
+    padding: 24px 0;
+  }
+  .notes-area textarea {
+    width: 100%;
+    min-height: 140px;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    padding: 16px;
+    background: var(--paper);
+    border: 1px solid var(--ink);
+    border-radius: 0;
+    color: var(--ink);
+    resize: vertical;
+    line-height: 1.55;
+  }
+  .notes-area textarea:focus {
+    outline: none;
+    border-color: var(--red);
+  }
+  .notes-hint {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* Finish block */
+  .finish-block {
+    margin-top: 48px;
+    padding: 48px 40px;
+    background: var(--ink);
+    color: var(--paper);
+    text-align: center;
+  }
+  .finish-eyebrow {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 20px;
+  }
+  .finish-title {
+    font-family: 'Paroque', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 300;
+    font-size: 56px;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    margin: 0 0 36px;
+    color: var(--paper);
+  }
+  .finish-body {
+    font-size: 15px;
+    color: var(--paper);
+    max-width: 520px;
+    margin: 0 auto 32px;
+    line-height: 1.55;
+    opacity: 0.85;
+  }
+  .finish-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn-finish {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    padding: 18px 32px;
+    border: 1px solid var(--paper);
+    background: transparent;
+    color: var(--paper);
+    cursor: pointer;
+    transition: background 140ms, color 140ms, border-color 140ms;
+  }
+  .btn-finish:hover {
+    background: var(--red);
+    border-color: var(--red);
+    color: var(--paper);
+  }
+  .btn-finish-primary {
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .btn-finish-primary:hover {
+    background: var(--red);
+    border-color: var(--red);
+    color: var(--paper);
+  }
+
+  /* Sidebar */
+  .sidebar {
+    position: sticky;
+    top: 120px;
+    align-self: start;
+  }
+  .sb-card {
+    border: 1px solid var(--ink);
+    background: var(--paper);
+  }
+  .sb-head {
+    padding: 28px 24px 28px;
+    border-bottom: 1px solid var(--ink);
+  }
+  .sb-model {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+  .sb-name {
+    font-family: 'Paroque', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 32px;
+    font-weight: 400;
+    letter-spacing: -0.03em;
+    margin-bottom: 24px;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .sb-total-label {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .sb-total {
+    font-family: 'Paroque', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 44px;
+    font-weight: 400;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .sb-breakdown {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--ink);
+  }
+  .sb-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    padding: 7px 0;
+    border-bottom: 1px dotted var(--rule-soft);
+  }
+  .sb-row:last-child { border-bottom: none; }
+  .sb-row .label { color: var(--muted); }
+  .sb-row .val {
+    font-weight: 500;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .sb-row .val.included-label {
+    color: var(--ink);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .sb-delivery-note {
+    font-size: 12px;
+    color: var(--red);
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--red);
+    display: none;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .sb-delivery-note.show { display: block; }
+
+  .sb-actions { padding: 20px 24px 14px; display: grid; gap: 10px; }
+
+  .btn {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 14px 20px;
+    border-radius: 0;
+    border: 1px solid var(--ink);
+    cursor: pointer;
+    transition: background 140ms ease, color 140ms ease, border-color 140ms ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+  .btn-primary {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .btn-primary:hover {
+    background: var(--red);
+    border-color: var(--red);
+  }
+  .btn-ghost {
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .btn-ghost:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .sb-share {
+    padding: 20px 24px 24px;
+    background: var(--paper-tint);
+    border-top: 1px solid var(--ink);
+  }
+  .sb-share-label {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .sb-share-label.saved { color: var(--red); }
+  .sb-link {
+    display: flex;
+    background: var(--paper);
+    border: 1px solid var(--ink);
+  }
+  .sb-link-url {
+    font-size: 12px;
+    color: var(--ink);
+    padding: 11px 14px;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .sb-link-copy {
+    background: var(--paper);
+    color: var(--ink);
+    border: none;
+    border-left: 1px solid var(--ink);
+    padding: 0 16px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 140ms, color 140ms;
+  }
+  .sb-link-copy:hover { background: var(--ink); color: var(--paper); }
+  .sb-link-copy.copied { background: var(--red); color: var(--paper); border-color: var(--red); }
+  .sb-link-unsaved {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 8px;
+    letter-spacing: 0.08em;
+    font-style: normal;
+  }
+  .sb-link-unsaved.hidden { display: none; }
+
+  /* Mobile sticky bar */
+  .mobile-bar {
+    display: none;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    padding: 14px 20px;
+    z-index: 100;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    background: var(--paper);
+    border-top: 1px solid var(--ink);
+  }
+  @media (max-width: 1024px) {
+    .sidebar { display: none; }
+    .mobile-bar { display: flex; }
+  }
+  .mobile-total-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .mobile-total {
+    font-family: 'Paroque', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 26px;
+    font-weight: 400;
+    color: var(--ink);
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+
+  .disclaimer {
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 48px;
+    padding: 28px 20px 12px;
+    border-top: 2px solid var(--ink);
+    line-height: 1.8;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%) translateY(16px);
+    background: var(--ink);
+    color: var(--paper);
+    padding: 14px 22px;
+    border-radius: 0;
+    border: 1px solid var(--ink);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    opacity: 0;
+    transition: opacity 220ms, transform 220ms;
+    z-index: 1000;
+    pointer-events: none;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  @media (max-width: 1024px) {
+    .toast { bottom: 96px; }
+  }
+
+  /* Modal */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal {
+    background: var(--paper);
+    border: 1px solid var(--ink);
+    max-width: 500px;
+    width: 100%;
+    padding: 44px;
+    position: relative;
+  }
+  .modal-eyebrow {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 14px;
+  }
+  .modal h3 {
+    font-family: 'Paroque', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 300;
+    font-size: 36px;
+    letter-spacing: -0.03em;
+    margin: 0 0 16px;
+    color: var(--ink);
+    line-height: 1.02;
+  }
+  .modal p.lead {
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.55;
+    margin: 0 0 28px;
+  }
+  .field { margin-bottom: 20px; }
+  .field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+  .field label .req { color: var(--red); margin-left: 6px; font-weight: 500; }
+  .field label .opt-label {
+    color: var(--muted);
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    text-transform: none;
+    margin-left: 6px;
+  }
+  .field input {
+    width: 100%;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    padding: 10px 0;
+    background: var(--paper);
+    border: none;
+    border-bottom: 1px solid var(--ink);
+    border-radius: 0;
+    color: var(--ink);
+    transition: border-color 140ms;
+  }
+  .field input:focus {
+    outline: none;
+    border-color: var(--red);
+  }
+  .field input.invalid { border-color: var(--red); }
+  .field-error {
+    font-size: 12px;
+    color: var(--red);
+    margin-top: 6px;
+    letter-spacing: 0.08em;
+    display: none;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .field-error.show { display: block; }
+
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 32px;
+  }
+  .modal-disclosure {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--rule-soft);
+    line-height: 1.55;
+  }
+  .modal-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: transparent;
+    border: none;
+    color: var(--ink);
+    cursor: pointer;
+    font-size: 22px;
+    line-height: 1;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 140ms;
+  }
+  .modal-close:hover { color: var(--red); }
+
+  /* Modal success state */
+  .modal-success { display: none; }
+  .modal.success-mode .modal-form { display: none; }
+  .modal.success-mode .modal-success { display: block; }
+
+  .success-mark {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--red);
+    color: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .success-mark::after {
+    content: "";
+    width: 12px; height: 20px;
+    border: solid var(--paper);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg) translate(-1px, -2px);
+  }
+  .saved-link-box {
+    margin: 24px 0 20px;
+    border: 1px solid var(--ink);
+    display: flex;
+    align-items: stretch;
+  }
+  .saved-link-url {
+    font-size: 12px;
+    padding: 14px 16px;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+  }
+  .saved-link-copy {
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    padding: 0 20px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 140ms;
+  }
+  .saved-link-copy:hover { background: var(--red); }
+  .saved-link-copy.copied { background: var(--red); }
+
+  /* Print view. Hidden in normal mode, revealed when the body enters print media */
+  .print-view { display: none; }
+
+  @media print {
+    body { background: #fff; }
+    body > *:not(.print-view) { display: none !important; }
+    .print-view { display: block !important; }
+  }
+
+  /* Print page structure */
+  .print-view {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #111;
+    background: #fff;
+    padding: 0.5in;
+    max-width: 8.5in;
+    margin: 0 auto;
+    font-size: 11pt;
+    line-height: 1.45;
+  }
+  .pv-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-bottom: 16pt;
+    border-bottom: 1.5pt solid #111;
+    margin-bottom: 24pt;
+  }
+  .pv-dealer-name {
+    font-family: 'Paroque', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 16pt;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    margin-bottom: 4pt;
+  }
+  .pv-dealer-meta {
+    font-size: 9pt;
+    color: #555;
+    line-height: 1.5;
+  }
+  .pv-config-meta {
+    text-align: right;
+    font-size: 9pt;
+    color: #555;
+    line-height: 1.6;
+  }
+  .pv-config-meta strong {
+    color: #111;
+    font-weight: 500;
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+  }
+  .pv-title {
+    font-family: 'Paroque', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 32pt;
+    font-weight: 400;
+    letter-spacing: -0.03em;
+    margin: 0 0 6pt;
+    line-height: 1;
+  }
+  .pv-tagline {
+    font-size: 11pt;
+    color: #333;
+    margin: 0 0 24pt;
+    line-height: 1.45;
+  }
+  .pv-blocks {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16pt;
+    margin-bottom: 20pt;
+  }
+  .pv-block {
+    border: 0.75pt solid #111;
+    padding: 10pt 12pt;
+  }
+  .pv-block-label {
+    font-size: 8pt;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: #666;
+    font-weight: 500;
+    margin-bottom: 6pt;
+  }
+  .pv-block-body {
+    font-size: 10pt;
+    line-height: 1.5;
+  }
+  .pv-block-body .name {
+    font-weight: 500;
+    font-size: 11pt;
+    margin-bottom: 2pt;
+  }
+  .pv-section-title {
+    font-family: 'Paroque', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 14pt;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    margin: 20pt 0 10pt;
+    padding-bottom: 5pt;
+    border-bottom: 0.75pt solid #111;
+  }
+  .pv-std-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 16pt;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .pv-std-list li {
+    font-size: 9.5pt;
+    padding: 3pt 0;
+    border-bottom: 0.5pt dotted #aaa;
+    line-height: 1.35;
+  }
+  .pv-cat-title {
+    font-size: 10pt;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin: 14pt 0 6pt;
+    color: #111;
+  }
+  .pv-opt-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 6pt 0;
+    border-bottom: 0.5pt dotted #aaa;
+    gap: 12pt;
+    font-size: 10pt;
+  }
+  .pv-opt-row .title { flex: 1; }
+  .pv-opt-row .price {
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-size: 10pt;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .pv-opt-row .qty {
+    color: #666;
+    font-size: 9pt;
+    margin-right: 8pt;
+  }
+  .pv-total-block {
+    border: 1.5pt double #000;
+    padding: 14pt 18pt;
+    margin: 22pt 0 20pt;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .pv-total-label {
+    font-size: 10pt;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-weight: 500;
+  }
+  .pv-total-amount {
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-size: 20pt;
+    font-weight: 600;
+  }
+  .pv-notes {
+    margin-top: 16pt;
+    padding: 10pt 12pt;
+    border: 0.75pt solid #111;
+    font-size: 10pt;
+    line-height: 1.5;
+    white-space: pre-wrap;
+  }
+  .pv-notes-label {
+    font-size: 8pt;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: #666;
+    font-weight: 500;
+    margin-bottom: 6pt;
+  }
+  .pv-signatures {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32pt;
+    margin-top: 36pt;
+  }
+  .pv-sig {
+    border-top: 0.75pt solid #111;
+    padding-top: 6pt;
+  }
+  .pv-sig-label {
+    font-size: 8pt;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #666;
+    font-weight: 500;
+  }
+  .pv-disclaimer {
+    margin-top: 28pt;
+    padding-top: 10pt;
+    border-top: 0.5pt solid #aaa;
+    font-size: 8pt;
+    color: #666;
+    line-height: 1.5;
+    display: flex;
+    justify-content: space-between;
+    gap: 16pt;
+  }
+  .pv-wordmark {
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-size: 8pt;
+    color: #6B7689;
+    font-variant: small-caps;
+    letter-spacing: 0.12em;
+    white-space: nowrap;
+    align-self: flex-end;
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand-lockup">
+      <span class="yw-mark">YachtWay</span>
+      <span class="dealer-chip">Dealer · <strong>YachtCreators</strong></span>
+    </div>
+    <div class="config-meta">
+      <span><span class="status-dot"></span><span id="save-status">Unsaved draft</span></span>
+      <span>Configuration <strong id="config-id-top">Pending</strong></span>
+    </div>
+  </div>
+</div>
+
+<nav class="anchor-nav">
+  <div class="anchor-nav-inner">
+    <a href="#standard">Included</a>
+    <a href="#engine">Engine</a>
+    <a href="#hull">Hull</a>
+    <a href="#deck">Deck</a>
+    <a href="#interior">Interior</a>
+    <a href="#mechanical">Mechanical</a>
+    <a href="#electronics">Electronics</a>
+    <a href="#extras">Extras</a>
+    <a href="#custom">Custom</a>
+    <a href="#notes">Notes</a>
+  </div>
+</nav>
+
+<div class="welcome-banner" id="welcome-banner">
+  <div class="welcome-banner-inner">
+    <span class="lead">
+      <span class="banner-eyebrow">Welcome back</span>
+      <span>Save your build to get a unique link you can return to.</span>
+    </span>
+    <div style="display: flex; gap: 16px; align-items: center;">
+      <button class="btn btn-ghost" onclick="openSaveModal()" style="padding: 8px 14px; font-size: 12px;">Save</button>
+      <button class="banner-close" onclick="closeBanner()" aria-label="Close">×</button>
+    </div>
+  </div>
+</div>
+
+<div class="page">
+  <main>
+
+    <section class="hero">
+      <div class="hero-eyebrow">Focus Motor Yachts · Model year 2026</div>
+      <div class="hero-row-top">
+        <div>
+          <h1 class="hero-title">Focus 3X</h1>
+          <p class="hero-sub">Convertible day cruiser with an electric glass hardtop, a full walkaround deck, and a transformer swim platform. Built in Croatia. Configured here.</p>
+        </div>
+        <div class="hero-standout">
+          <div class="num">50</div>
+          <div class="lbl">Top speed, knots</div>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="label">Base price</div><div class="value">$790,603</div></div>
+        <div class="hero-stat"><div class="label">Length</div><div class="value">38.2<span class="unit">ft</span></div></div>
+        <div class="hero-stat"><div class="label">Beam</div><div class="value">11.8<span class="unit">ft</span></div></div>
+        <div class="hero-stat"><div class="label">Propulsion</div><div class="value">Twin<span class="unit">outboard</span></div></div>
+        <div class="hero-stat"><div class="label">Passengers</div><div class="value">10</div></div>
+      </div>
+    </section>
+
+    <section class="section" id="standard">
+      <div class="section-head">
+        <h2>Standard equipment</h2>
+        <div class="section-eyebrow">Included in base · <strong>Sport trim</strong></div>
+      </div>
+      <div class="std-eq">
+        <p class="std-eq-intro">Every Focus 3X in Sport trim leaves the yard with the following equipment included in the base price.</p>
+        <ul class="std-eq-list">
+          <li><span>Glass hardtop with electric opening</span></li>
+          <li><span>Walkaround deck with protective rubber frame</span></li>
+          <li><span>Bow thruster</span></li>
+          <li><span>Integrated bow sunbed</span></li>
+          <li><span>GPS: two Simrad or Garmin twelve inch units</span></li>
+          <li><span>Inverter, 3 kVA</span></li>
+          <li><span>Inverter, 1.6 kVA</span></li>
+          <li><span>Air conditioning, Webasto 16,000 BTU, 240V</span></li>
+          <li><span>Custom Awlgrip color, hardtop deck and hull</span></li>
+          <li><span>Esthec or teak cockpit and side decks</span></li>
+          <li><span>Esthec or teak cabin flooring</span></li>
+          <li><span>Built-in LED lights in side decks</span></li>
+          <li><span>Bennett trim tabs with automatic control</span></li>
+          <li><span>Two underwater LED lights on stern</span></li>
+          <li><span>Fusion audio with JL Audio speakers and two subwoofers</span></li>
+          <li><span>Isotta steering wheel</span></li>
+          <li><span>Cockpit cover</span></li>
+          <li><span>Awlgrip finish engine room</span></li>
+          <li><span>Hidden cleat system</span></li>
+          <li><span>Two meter wide electric cockpit side windows</span></li>
+        </ul>
+      </div>
+      <div class="delivery-pkg">
+        <div class="delivery-pkg-title">United States delivery · Included</div>
+        <div class="delivery-pkg-body">Ocean shipping to Fort Lauderdale and all applicable United States import duties are included in the base price. State sales tax, vessel documentation, and any tariffs in effect at time of import are not included and will be quoted separately.</div>
+      </div>
+    </section>
+
+    <section class="section" id="engine">
+      <div class="section-head"><h2>Engine and propulsion</h2><div class="section-eyebrow">Select · <strong id="count-engine">1 of 1</strong></div></div>
+      <div class="section-body" data-category="engine"></div>
+    </section>
+    <section class="section" id="hull">
+      <div class="section-head"><h2>Hull and exterior</h2><div class="section-eyebrow">Selected · <strong id="count-hull">0 of 2</strong></div></div>
+      <div class="section-body" data-category="hull"></div>
+    </section>
+    <section class="section" id="deck">
+      <div class="section-head"><h2>Deck and cockpit</h2><div class="section-eyebrow">Selected · <strong id="count-deck">0 of 6</strong></div></div>
+      <div class="section-body" data-category="deck"></div>
+    </section>
+    <section class="section" id="interior">
+      <div class="section-head"><h2>Interior</h2><div class="section-eyebrow">Selected · <strong id="count-interior">0 of 8</strong></div></div>
+      <div class="section-body" data-category="interior"></div>
+    </section>
+    <section class="section" id="mechanical">
+      <div class="section-head"><h2>Mechanical systems</h2><div class="section-eyebrow">Selected · <strong id="count-mechanical">0 of 4</strong></div></div>
+      <div class="section-body" data-category="mechanical"></div>
+    </section>
+    <section class="section" id="electronics">
+      <div class="section-head"><h2>Electronics and electric</h2><div class="section-eyebrow">Selected · <strong id="count-electronics">0 of 6</strong></div></div>
+      <div class="section-body" data-category="electronics"></div>
+    </section>
+    <section class="section" id="extras">
+      <div class="section-head"><h2>Extras and soft goods</h2><div class="section-eyebrow">Selected · <strong id="count-extras">0 of 3</strong></div></div>
+      <div class="section-body" data-category="extras"></div>
+    </section>
+
+    <section class="section" id="custom">
+      <div class="section-head">
+        <h2>Custom options</h2>
+        <div class="section-eyebrow">Added · <strong id="count-custom">0</strong></div>
+      </div>
+      <div class="custom-list" id="custom-list">
+        <div class="custom-list-empty" id="custom-empty">No custom options added. Use the form below to request something that is not in the standard option list. Each custom item will be quoted separately by YachtCreators.</div>
+      </div>
+      <div class="custom-add">
+        <input type="text" id="custom-title" placeholder="Option name, for example: Teak cockpit ladder" maxlength="80">
+        <input type="text" id="custom-desc" placeholder="Description or specifics (optional)" maxlength="160">
+        <button class="btn btn-ghost" onclick="addCustomOption()">Add</button>
+      </div>
+    </section>
+
+    <section class="section" id="notes">
+      <div class="section-head">
+        <h2>Notes for YachtCreators</h2>
+        <div class="section-eyebrow">Optional · <strong id="notes-count">0 characters</strong></div>
+      </div>
+      <div class="notes-area">
+        <textarea id="notes-field" placeholder="Anything you want YachtCreators to know about this build. Preferred delivery window, specific finishes, questions about the Focus 3X lineup, or constraints on your end."></textarea>
+        <div class="notes-hint">Saved with your build and visible to YachtCreators</div>
+      </div>
+    </section>
+
+    <div class="finish-block">
+      <div class="finish-eyebrow">Finished?</div>
+      <h2 class="finish-title">Save this build and send YachtCreators the link</h2>
+      <div class="finish-actions">
+        <button class="btn-finish btn-finish-primary" onclick="openSaveModal()">Save</button>
+        <button class="btn-finish" onclick="exportPDF()">Download PDF</button>
+      </div>
+    </div>
+
+    <div class="disclaimer">
+      Prices in United States Dollars · Specifications subject to change · Not a contract of sale
+    </div>
+
+  </main>
+
+  <aside class="sidebar">
+    <div class="sb-card">
+      <div class="sb-head">
+        <div class="sb-model">Focus Motor Yachts · 2026</div>
+        <div class="sb-name">Focus 3X</div>
+        <div class="sb-total-label">Build total</div>
+        <div class="sb-total" id="sb-total">$790,603</div>
+      </div>
+      <div class="sb-breakdown">
+        <div class="sb-row"><span class="label">Base, Sport trim</span><span class="val">$790,603</span></div>
+        <div class="sb-row"><span class="label">Selected options</span><span class="val" id="sb-opts">$0</span></div>
+        <div class="sb-row"><span class="label">Options count</span><span class="val" id="sb-count">0</span></div>
+        <div class="sb-row"><span class="label">Custom options</span><span class="val" id="sb-custom-count">0</span></div>
+        <div class="sb-row"><span class="label">United States delivery</span><span class="val included-label">Included</span></div>
+        <div class="sb-delivery-note" id="sb-delivery-note">Delivery delta · <span id="sb-delivery-weeks">0</span> weeks added</div>
+      </div>
+      <div class="sb-actions">
+        <button class="btn btn-primary" onclick="openSaveModal()">Save</button>
+        <button class="btn btn-ghost" onclick="exportPDF()">Download PDF</button>
+      </div>
+      <div class="sb-share">
+        <div class="sb-share-label" id="sb-share-label">Customer link</div>
+        <div class="sb-link">
+          <div class="sb-link-url" id="sb-link-url">Save the build to generate a link</div>
+          <button class="sb-link-copy" id="copy-btn" onclick="copyLink()" disabled style="opacity: 0.4; cursor: not-allowed;">Copy</button>
+        </div>
+        <div class="sb-link-unsaved" id="sb-link-unsaved">The unique link is generated once you save</div>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<div class="mobile-bar">
+  <div>
+    <div class="mobile-total-label">Build total</div>
+    <div class="mobile-total" id="mobile-total">$790,603</div>
+  </div>
+  <div style="display: flex; gap: 8px;">
+    <button class="btn btn-ghost" onclick="exportPDF()" style="padding: 12px 14px; font-size: 12px;">PDF</button>
+    <button class="btn btn-primary" onclick="openSaveModal()" style="padding: 12px 18px;">Save</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="customer-modal">
+  <div class="modal" id="modal-inner">
+    <button class="modal-close" onclick="closeCustomerModal()" aria-label="Close">×</button>
+
+    <div class="modal-form">
+      <div class="modal-eyebrow" id="modal-eyebrow">Save your build</div>
+      <h3 id="modal-title">A few details to save and share</h3>
+      <p class="lead" id="modal-body">Your name, email, and phone are required. YachtCreators uses these to send the build back to you, answer questions, and prepare the signed PDF when you are ready.</p>
+
+      <div class="field">
+        <label>Full name <span class="req">Required</span></label>
+        <input type="text" id="f-name" autocomplete="name">
+        <div class="field-error" id="err-name">Full name is required</div>
+      </div>
+      <div class="field">
+        <label>Email <span class="req">Required</span></label>
+        <input type="email" id="f-email" autocomplete="email">
+        <div class="field-error" id="err-email">Enter a valid email address</div>
+      </div>
+      <div class="field">
+        <label>Phone <span class="req">Required</span></label>
+        <input type="tel" id="f-phone" autocomplete="tel">
+        <div class="field-error" id="err-phone">Enter a valid phone number</div>
+      </div>
+      <div class="field">
+        <label>Vessel nickname <span class="opt-label">optional</span></label>
+        <input type="text" id="f-nick" placeholder="Nothing to fear">
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-ghost" onclick="closeCustomerModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="submitCustomerModal()">Save</button>
+      </div>
+
+      <div class="modal-disclosure">
+        Your details are shared with YachtCreators so they can follow up on your build. No third-party marketing.
+      </div>
+    </div>
+
+    <div class="modal-success">
+      <div class="success-mark"></div>
+      <div class="modal-eyebrow">Build saved</div>
+      <h3 id="success-title">Your build is ready</h3>
+      <p class="lead">YachtCreators has been notified. Use this link to return to your configuration, share it with anyone you want, and keep refining it.</p>
+
+      <div class="saved-link-box">
+        <div class="saved-link-url" id="saved-link-url">YachtWay.com/configure/focus-3x/XXXXXX</div>
+        <button class="saved-link-copy" id="saved-copy-btn" onclick="copySavedLink()">Copy link</button>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-ghost" onclick="closeCustomerModal()">Close</button>
+        <button class="btn btn-primary" onclick="exportPDFFromSuccess()">Download PDF</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">Link copied</div>
+
+<div class="print-view" id="print-view"></div>
+
+<script>
+  const optionsData = {
+    engine: {
+      type: "exclusivity",
+      items: [
+        { id: "eng-mercury", title: "Two Mercury Verado 5.7 V10, 400 HP", desc: "Outboard configuration. Gas powered. Sport trim standard.", price: 0, included: true, default: true, deliveryDelta: 0 },
+        { id: "eng-yanmar", title: "Two Yanmar 8LV370Z ZT, 370 HP, E-SHIFT", desc: "Inboard diesel configuration. Twin turbocharged and intercooled. Rated 3,800 rpm.", price: 11200, deliveryDelta: 4, note: "Preferred for extended cruising range. 1,000 engine hour warranty." },
+        { id: "eng-mercruiser", title: "Two MerCruiser 8.2 HO Magnum MPI, 430 HP, Bravo III-XR JPS", desc: "Inboard gas configuration with joystick piloting system.", price: 44800, deliveryDelta: 6 }
+      ]
+    },
+    hull: {
+      type: "standard",
+      items: [
+        { id: "hull-chain", title: "Stainless steel anchor chain, 160 feet", desc: "Replaces standard galvanized chain.", price: 2200, deliveryDelta: 0 },
+        { id: "hull-rubber-extra", title: "Extended protective rubber trim", desc: "Additional rubber frame coverage along the sheer line.", price: 1800, deliveryDelta: 0, qty: true, maxQty: 2 }
+      ]
+    },
+    deck: {
+      type: "standard",
+      items: [
+        { id: "deck-table", title: "Electric height-adjustable cockpit table", desc: "Expands to 3.4 by 3.9 feet. Includes cushion for conversion into a sun lounge.", price: 7600, deliveryDelta: 0 },
+        { id: "deck-sunshade", title: "Cockpit sun shade with carbon fiber poles", desc: "Stows flush with the hardtop. Deploys manually.", price: 4800, deliveryDelta: 2 },
+        { id: "deck-wetbar", title: "Wet bar in cockpit", desc: "Stainless sink with freshwater tap and drain.", price: 9400, deliveryDelta: 2 },
+        { id: "deck-fridge", title: "Refrigerator in cockpit, 3.1 cubic feet, 12V", desc: "Integrated into the cockpit console.", price: 2600, deliveryDelta: 0 },
+        { id: "deck-carbon-dash", title: "Dashboard and wet bar in carbon fiber finish", desc: "Replaces the standard leather-wrapped dashboard.", price: 8500, deliveryDelta: 3, note: "Includes matching trim on cockpit console and wet bar surround." }
+      ],
+      exclusivityGroups: [
+        { label: "Steering wheel", items: [
+          { id: "wheel-std", title: "Isotta steering wheel", desc: "Standard Isotta wheel with factory trim.", price: 0, included: true, default: true, deliveryDelta: 0 },
+          { id: "wheel-buttons", title: "Isotta steering wheel with control buttons", desc: "Integrated controls for horn, autopilot, and display cycling.", price: 2100, deliveryDelta: 0 }
+        ]}
+      ]
+    },
+    interior: {
+      type: "standard",
+      items: [
+        { id: "int-tv", title: "Forty two inch smart television in cabin", desc: "Wall mounted. 4K. Integrated with the Fusion audio system.", price: 3200, deliveryDelta: 0 },
+        { id: "int-cooktop", title: "Electric cooktop in galley, 240V", desc: "Two burner induction. Flush mounted with glass top.", price: 2100, deliveryDelta: 0 },
+        { id: "int-galley-fridge", title: "Refrigerator in galley, 3.1 cubic feet, 12V", desc: "Stainless front. Under-counter install.", price: 2600, deliveryDelta: 0 },
+        { id: "int-safe", title: "Personal storage safe", desc: "Tamper resistant. Installed in cabin.", price: 900, deliveryDelta: 0 },
+        { id: "int-owner-setup", title: "Owner setup package", desc: "Soft goods, bedding, Nespresso machine, utensils, and starter pantry.", price: 4500, deliveryDelta: 0 },
+        { id: "int-tableware", title: "Magnetic marine glasses and tableware", desc: "Full service for eight. Stays put at cruise.", price: 1200, deliveryDelta: 0 },
+        { id: "int-leather", title: "Interior in leather and alcantara upholstery", desc: "Upgrades all standard fabric surfaces in cabin and saloon.", price: 14500, deliveryDelta: 5 },
+        { id: "int-wood", title: "Custom wood choice for interior", desc: "Select from walnut, oak, teak, or zebrano finishes.", price: 6800, deliveryDelta: 3, note: "Samples shipped on request." }
+      ]
+    },
+    mechanical: {
+      type: "standard",
+      items: [
+        { id: "mech-joystick", title: "Joystick for 360 degree maneuvering", desc: "Compatible with Mercury, Volvo, and Yanmar drive systems.", price: 12500, deliveryDelta: 2 },
+        { id: "mech-genset", title: "Diesel generator, 6 kW", desc: "Quiet-running. Feeds the 240V systems at anchor.", price: 18000, deliveryDelta: 3 },
+        { id: "mech-seakeeper", title: "Gyro stabilizer, Seakeeper 3", desc: "Active roll stabilization at anchor and underway.", price: 36500, deliveryDelta: 4, note: "Installed on centerline under the sunbed." }
+      ],
+      exclusivityGroups: [
+        { label: "Swim platform", items: [
+          { id: "platform-fixed", title: "Fixed swim platform", desc: "Teak-laid and integrated. Sport trim standard.", price: 0, included: true, default: true, deliveryDelta: 0 },
+          { id: "platform-hydraulic", title: "Hydraulic swim platform", desc: "Lowers into the water for tender launch and swim access.", price: 22000, deliveryDelta: 3 },
+          { id: "platform-transformer", title: "Transformer hydraulic swim platform", desc: "Lifts 20 inches or drops 24 inches. Maximum load 661 pounds.", price: 38000, deliveryDelta: 5, note: "Unique to the Focus lineup. Converts the aft deck into a beach club." }
+        ]}
+      ]
+    },
+    electronics: {
+      type: "standard",
+      items: [
+        { id: "elec-radar", title: "Radar: Simrad HALO20+", desc: "Twenty inch pulse compression radar. Integrated with helm displays.", price: 6800, deliveryDelta: 2 },
+        { id: "elec-vhf-ais", title: "VHF: Simrad NAIS 500 with antenna", desc: "AIS transponder. Broadcasts vessel identity to nearby traffic.", price: 2400, deliveryDelta: 0 },
+        { id: "elec-vhf-rs12", title: "VHF: Simrad RS12 with antenna", desc: "Primary communication radio. Mounted at the helm.", price: 1600, deliveryDelta: 0 },
+        { id: "elec-autopilot", title: "Autopilot: Simrad", desc: "Paired with the helm displays. Requires active GPS.", price: 4200, deliveryDelta: 2 },
+        { id: "elec-sionyx", title: "SIONYX NIGHTWAVE low-visibility camera", desc: "Night vision at the helm. Integrated into the chart plotter.", price: 3900, deliveryDelta: 2, note: "Performs best in new moon conditions offshore." }
+      ],
+      exclusivityGroups: [
+        { label: "Underwater LED lights", items: [
+          { id: "led-2-stern", title: "Two LED lights on stern", desc: "Sport trim standard.", price: 0, included: true, default: true, deliveryDelta: 0 },
+          { id: "led-4-stern", title: "Four LED lights on stern", desc: "Broader aft illumination for night boarding.", price: 2800, deliveryDelta: 0 },
+          { id: "led-full", title: "Four on stern plus two on each side", desc: "Complete underwater lighting perimeter.", price: 5600, deliveryDelta: 0 }
+        ]}
+      ]
+    },
+    extras: {
+      type: "standard",
+      items: [
+        { id: "extra-equipment", title: "Commissioning bundle", desc: "Fenders, mooring lines, USCG life jackets, and flares.", price: 3600, deliveryDelta: 0 },
+        { id: "extra-cover", title: "Full hull cover for transport and winter storage", desc: "Custom fit. Stitched to match the hull color.", price: 2800, deliveryDelta: 2 },
+        { id: "extra-tender", title: "Williams MiniJet 280 tender with dock trolley", desc: "Sized for the transformer swim platform. Dealer installed at delivery.", price: 42500, deliveryDelta: 0, note: "Requires the hydraulic or transformer swim platform option.", qty: true, maxQty: 1 }
+      ]
+    }
+  };
+
+  const state = {
+    selections: {},
+    quantities: {},
+    customer: null,
+    customOptions: [],
+    notes: "",
+    configId: null
+  };
+
+  function generateConfigId() {
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    let id = "";
+    for (let i = 0; i < 6; i++) id += chars[Math.floor(Math.random() * chars.length)];
+    return id;
+  }
+
+  function initState() {
+    Object.keys(optionsData).forEach(cat => {
+      const section = optionsData[cat];
+      if (section.type === "exclusivity") {
+        const def = section.items.find(i => i.default);
+        if (def) state.selections[def.id] = true;
+      }
+      (section.items || []).forEach(i => { if (i.qty) state.quantities[i.id] = 0; });
+      if (section.exclusivityGroups) {
+        section.exclusivityGroups.forEach(g => {
+          const def = g.items.find(i => i.default);
+          if (def) state.selections[def.id] = true;
+        });
+      }
+    });
+  }
+
+  function formatPrice(n) {
+    return "$" + Math.round(n).toLocaleString("en-US");
+  }
+
+  function renderOption(item, opts) {
+    const selected = !!state.selections[item.id];
+    const isIncluded = !!item.included;
+    const isRadio = !!opts.radio;
+    const qty = state.quantities[item.id] || 0;
+
+    const classes = ["opt"];
+    if (selected) classes.push("selected");
+    if (isIncluded) classes.push("included");
+
+    const tags = [];
+    if (opts.exclusivityLabel) tags.push(`<span class="tag">One of ${opts.exclusivityLabel}</span>`);
+    if (item.qty) tags.push(`<span class="tag tag-qty">Quantity optional</span>`);
+    if (item.deliveryDelta && item.deliveryDelta > 0) tags.push(`<span class="tag tag-delivery">Delivery + ${item.deliveryDelta} weeks</span>`);
+    if (isIncluded) tags.push(`<span class="tag tag-included">Included</span>`);
+
+    let priceHTML;
+    if (isIncluded) priceHTML = `<div class="price included-label">Included</div>`;
+    else if (item.qty && qty > 0) priceHTML = `<div class="price positive">${formatPrice(item.price * qty)}</div>`;
+    else priceHTML = `<div class="price positive">${formatPrice(item.price)}</div>`;
+
+    const qtyHTML = item.qty ? `
+      <div class="qty-ctrl" onclick="event.stopPropagation();">
+        <button onclick="changeQty('${item.id}', -1)" ${qty === 0 ? "disabled" : ""} aria-label="Decrease">−</button>
+        <span class="qty">${qty}</span>
+        <button onclick="changeQty('${item.id}', 1)" ${qty >= (item.maxQty || 10) ? "disabled" : ""} aria-label="Increase">+</button>
+      </div>` : "";
+
+    const checkClass = isRadio ? "check radio" : "check";
+
+    return `
+      <div class="${classes.join(" ")}" data-id="${item.id}" onclick="toggleOption('${item.id}', ${item.qty ? "true" : "false"})">
+        <div class="${checkClass}"></div>
+        <div class="opt-main">
+          <div class="opt-title">${item.title}</div>
+          <div class="opt-desc">${item.desc}</div>
+          ${tags.length ? `<div class="opt-tags">${tags.join("")}</div>` : ""}
+          ${item.note ? `<div class="opt-note">${item.note}</div>` : ""}
+        </div>
+        <div class="opt-right">${priceHTML}${qtyHTML}</div>
+      </div>`;
+  }
+
+  function renderCategory(catKey) {
+    const section = optionsData[catKey];
+    const container = document.querySelector(`[data-category="${catKey}"]`);
+    if (!container) return;
+    let html = "";
+    if (section.type === "exclusivity") {
+      section.items.forEach(item => { html += renderOption(item, { radio: true, exclusivityLabel: String(section.items.length) }); });
+    } else {
+      (section.items || []).forEach(item => { html += renderOption(item, {}); });
+      if (section.exclusivityGroups) {
+        section.exclusivityGroups.forEach(group => {
+          group.items.forEach(item => { html += renderOption(item, { radio: true, exclusivityLabel: String(group.items.length) }); });
+        });
+      }
+    }
+    container.innerHTML = html;
+  }
+
+  function toggleOption(id, hasQty) {
+    let foundItem = null, groupItems = null;
+    for (const catKey of Object.keys(optionsData)) {
+      const section = optionsData[catKey];
+      if (section.type === "exclusivity") {
+        const m = section.items.find(i => i.id === id);
+        if (m) { foundItem = m; groupItems = section.items; break; }
+      }
+      if (section.items && section.type !== "exclusivity") {
+        const m = section.items.find(i => i.id === id);
+        if (m) { foundItem = m; break; }
+      }
+      if (section.exclusivityGroups) {
+        for (const g of section.exclusivityGroups) {
+          const m = g.items.find(i => i.id === id);
+          if (m) { foundItem = m; groupItems = g.items; break; }
+        }
+        if (foundItem) break;
+      }
+    }
+    if (!foundItem || foundItem.included) return;
+
+    if (hasQty) {
+      if ((state.quantities[id] || 0) === 0) { state.quantities[id] = 1; state.selections[id] = true; }
+      else { state.quantities[id] = 0; state.selections[id] = false; }
+      update();
+      return;
+    }
+    if (groupItems) {
+      groupItems.forEach(item => { state.selections[item.id] = false; });
+      state.selections[id] = true;
+    } else {
+      state.selections[id] = !state.selections[id];
+    }
+    update();
+  }
+
+  function changeQty(id, delta) {
+    const current = state.quantities[id] || 0;
+    const next = Math.max(0, Math.min(10, current + delta));
+    state.quantities[id] = next;
+    state.selections[id] = next > 0;
+    update();
+  }
+
+  function calcTotals() {
+    const base = 790603;
+    let optsTotal = 0, count = 0, maxDelta = 0;
+    const collect = (items) => {
+      items.forEach(item => {
+        if (item.included) return;
+        if (state.selections[item.id]) {
+          if (item.qty) {
+            const q = state.quantities[item.id] || 0;
+            optsTotal += item.price * q;
+            if (q > 0) count += 1;
+          } else {
+            optsTotal += item.price;
+            count += 1;
+          }
+          if (item.deliveryDelta && item.deliveryDelta > maxDelta) maxDelta = item.deliveryDelta;
+        }
+      });
+    };
+    Object.keys(optionsData).forEach(catKey => {
+      const section = optionsData[catKey];
+      if (section.type === "exclusivity") collect(section.items);
+      if (section.items && section.type !== "exclusivity") collect(section.items);
+      if (section.exclusivityGroups) section.exclusivityGroups.forEach(g => collect(g.items));
+    });
+    return { base, optsTotal, total: base + optsTotal, count, maxDelta };
+  }
+
+  function updateCounts() {
+    Object.keys(optionsData).forEach(catKey => {
+      const el = document.getElementById(`count-${catKey}`);
+      if (!el) return;
+      const section = optionsData[catKey];
+      let selected = 0, total = 0;
+      if (section.type === "exclusivity") { total = 1; selected = 1; }
+      else {
+        (section.items || []).forEach(i => { total += 1; if (state.selections[i.id]) selected += 1; });
+        (section.exclusivityGroups || []).forEach(g => {
+          total += 1;
+          const sel = g.items.find(i => state.selections[i.id] && !i.included);
+          if (sel) selected += 1;
+        });
+      }
+      el.textContent = `${selected} of ${total}`;
+    });
+  }
+
+  function renderCustomOptions() {
+    const container = document.getElementById("custom-list");
+    const empty = document.getElementById("custom-empty");
+    const countEl = document.getElementById("count-custom");
+    const sbCount = document.getElementById("sb-custom-count");
+
+    countEl.textContent = String(state.customOptions.length);
+    sbCount.textContent = String(state.customOptions.length);
+
+    // Remove all custom-item children but keep the empty div
+    Array.from(container.querySelectorAll(".custom-item")).forEach(n => n.remove());
+
+    if (state.customOptions.length === 0) {
+      empty.style.display = "block";
+      return;
+    }
+    empty.style.display = "none";
+
+    state.customOptions.forEach((o, idx) => {
+      const row = document.createElement("div");
+      row.className = "custom-item";
+      row.innerHTML = `
+        <div class="bullet"></div>
+        <div>
+          <div class="custom-item-title">${escapeHtml(o.title)}</div>
+          ${o.desc ? `<div class="custom-item-desc">${escapeHtml(o.desc)}</div>` : ""}
+          <div class="opt-tags" style="margin-top: 10px;"><span class="tag tag-quote">To be quoted</span></div>
+        </div>
+        <button class="custom-remove" onclick="removeCustomOption(${idx})">Remove</button>
+      `;
+      container.appendChild(row);
+    });
+  }
+
+  function escapeHtml(s) {
+    return s.replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  }
+
+  function addCustomOption() {
+    const titleEl = document.getElementById("custom-title");
+    const descEl = document.getElementById("custom-desc");
+    const title = titleEl.value.trim();
+    const desc = descEl.value.trim();
+    if (!title) {
+      titleEl.focus();
+      titleEl.style.borderColor = "var(--red)";
+      setTimeout(() => titleEl.style.borderColor = "", 1200);
+      return;
+    }
+    state.customOptions.push({ title, desc });
+    titleEl.value = "";
+    descEl.value = "";
+    renderCustomOptions();
+    showToast("Custom option added");
+  }
+
+  function removeCustomOption(idx) {
+    state.customOptions.splice(idx, 1);
+    renderCustomOptions();
+  }
+
+  function updateNotesCount() {
+    const ta = document.getElementById("notes-field");
+    const cnt = document.getElementById("notes-count");
+    state.notes = ta.value;
+    cnt.textContent = `${state.notes.length} characters`;
+  }
+
+  function update() {
+    Object.keys(optionsData).forEach(renderCategory);
+    const totals = calcTotals();
+    document.getElementById("sb-total").textContent = formatPrice(totals.total);
+    document.getElementById("sb-opts").textContent = (totals.optsTotal > 0 ? "+" : "") + formatPrice(totals.optsTotal);
+    document.getElementById("sb-count").textContent = totals.count;
+    document.getElementById("mobile-total").textContent = formatPrice(totals.total);
+    const dn = document.getElementById("sb-delivery-note");
+    if (totals.maxDelta > 0) {
+      dn.classList.add("show");
+      document.getElementById("sb-delivery-weeks").textContent = totals.maxDelta;
+    } else {
+      dn.classList.remove("show");
+    }
+    updateCounts();
+    renderCustomOptions();
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    setTimeout(() => t.classList.remove("show"), 2400);
+  }
+
+  function copyLink() {
+    if (!state.configId) return;
+    const url = `https://YachtWay.com/configure/focus-3x/${state.configId}`;
+    navigator.clipboard.writeText(url).then(() => {
+      const btn = document.getElementById("copy-btn");
+      btn.textContent = "Copied";
+      btn.classList.add("copied");
+      showToast("Customer link copied");
+      setTimeout(() => { btn.textContent = "Copy"; btn.classList.remove("copied"); }, 2500);
+    });
+  }
+
+  function copySavedLink() {
+    if (!state.configId) return;
+    const url = `https://YachtWay.com/configure/focus-3x/${state.configId}`;
+    navigator.clipboard.writeText(url).then(() => {
+      const btn = document.getElementById("saved-copy-btn");
+      btn.textContent = "Copied";
+      btn.classList.add("copied");
+      setTimeout(() => { btn.textContent = "Copy link"; btn.classList.remove("copied"); }, 2500);
+    });
+  }
+
+  function openSaveModal() {
+    const modal = document.getElementById("customer-modal");
+    const modalInner = document.getElementById("modal-inner");
+    modalInner.classList.remove("success-mode");
+
+    if (state.customer) {
+      document.getElementById("f-name").value = state.customer.name || "";
+      document.getElementById("f-email").value = state.customer.email || "";
+      document.getElementById("f-phone").value = state.customer.phone || "";
+      document.getElementById("f-nick").value = state.customer.nickname || "";
+
+      // If already saved once, update the modal copy
+      document.getElementById("modal-title").textContent = "Update your details and re-save";
+      document.getElementById("modal-body").textContent = "Your build link stays the same. Update your info or close this and head back to the build.";
+    } else {
+      document.getElementById("modal-title").textContent = "A few details to save and share";
+      document.getElementById("modal-body").textContent = "Your name, email, and phone are required. YachtCreators uses these to send the build back to you, answer questions, and prepare the signed PDF when you are ready.";
+    }
+    modal.classList.add("show");
+  }
+
+  function closeCustomerModal() {
+    document.getElementById("customer-modal").classList.remove("show");
+    ["err-name", "err-email", "err-phone"].forEach(id => document.getElementById(id).classList.remove("show"));
+    ["f-name", "f-email", "f-phone"].forEach(id => document.getElementById(id).classList.remove("invalid"));
+  }
+
+  function validEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()); }
+  function validPhone(v) { const d = v.replace(/\D/g, ""); return d.length >= 7 && d.length <= 15; }
+
+  function submitCustomerModal() {
+    const name = document.getElementById("f-name").value.trim();
+    const email = document.getElementById("f-email").value.trim();
+    const phone = document.getElementById("f-phone").value.trim();
+    const nickname = document.getElementById("f-nick").value.trim();
+    let ok = true;
+    const set = (id, cond, errId) => {
+      if (!cond) { document.getElementById(id).classList.add("invalid"); document.getElementById(errId).classList.add("show"); ok = false; }
+      else { document.getElementById(id).classList.remove("invalid"); document.getElementById(errId).classList.remove("show"); }
+    };
+    set("f-name", name.length > 0, "err-name");
+    set("f-email", email.length > 0 && validEmail(email), "err-email");
+    set("f-phone", phone.length > 0 && validPhone(phone), "err-phone");
+
+    if (!ok) return;
+
+    state.customer = { name, email, phone, nickname };
+
+    // Generate a unique link if this is the first save
+    if (!state.configId) state.configId = generateConfigId();
+
+    // Update UI
+    const url = `YachtWay.com/configure/focus-3x/${state.configId}`;
+    document.getElementById("sb-link-url").textContent = url;
+    document.getElementById("saved-link-url").textContent = url;
+    document.getElementById("sb-link-unsaved").classList.add("hidden");
+    document.getElementById("sb-share-label").textContent = "Your unique link";
+    document.getElementById("sb-share-label").classList.add("saved");
+    document.getElementById("config-id-top").textContent = state.configId;
+    document.getElementById("save-status").textContent = "Saved";
+    const copyBtn = document.getElementById("copy-btn");
+    copyBtn.disabled = false;
+    copyBtn.style.opacity = "";
+    copyBtn.style.cursor = "pointer";
+
+    closeBanner();
+
+    // Swap modal to success state
+    document.getElementById("modal-inner").classList.add("success-mode");
+    document.getElementById("success-title").textContent = nickname
+      ? `"${nickname}" is saved`
+      : `${name.split(" ")[0] || "Your build"} is saved`;
+  }
+
+  const categoryLabels = {
+    engine: "Engine and propulsion",
+    hull: "Hull and exterior",
+    deck: "Deck and cockpit",
+    interior: "Interior",
+    mechanical: "Mechanical systems",
+    electronics: "Electronics and electric",
+    extras: "Extras and soft goods"
+  };
+
+  const standardEquipment = [
+    "Glass hardtop with electric opening",
+    "Walkaround deck with protective rubber frame",
+    "Bow thruster",
+    "Integrated bow sunbed",
+    "GPS: two Simrad or Garmin twelve inch units",
+    "Inverter, 3 kVA",
+    "Inverter, 1.6 kVA",
+    "Air conditioning, Webasto 16,000 BTU, 240V",
+    "Custom Awlgrip color, hardtop deck and hull",
+    "Esthec or teak cockpit and side decks",
+    "Esthec or teak cabin flooring",
+    "Built-in LED lights in side decks",
+    "Bennett trim tabs with automatic control",
+    "Two underwater LED lights on stern",
+    "Fusion audio with JL Audio speakers and two subwoofers",
+    "Isotta steering wheel",
+    "Cockpit cover",
+    "Awlgrip finish engine room",
+    "Hidden cleat system",
+    "Two meter wide electric cockpit side windows"
+  ];
+
+  function collectSelectedOptions() {
+    const result = {};
+    Object.keys(optionsData).forEach(catKey => {
+      const section = optionsData[catKey];
+      const chosen = [];
+      const consider = (item) => {
+        if (item.included) return;
+        if (state.selections[item.id]) {
+          if (item.qty) {
+            const q = state.quantities[item.id] || 0;
+            if (q > 0) chosen.push({ title: item.title, price: item.price * q, qty: q });
+          } else {
+            chosen.push({ title: item.title, price: item.price, qty: 1 });
+          }
+        }
+      };
+      if (section.type === "exclusivity") section.items.forEach(consider);
+      if (section.items && section.type !== "exclusivity") section.items.forEach(consider);
+      if (section.exclusivityGroups) section.exclusivityGroups.forEach(g => g.items.forEach(consider));
+      if (chosen.length > 0) result[catKey] = chosen;
+    });
+    return result;
+  }
+
+  function buildPrintView() {
+    const totals = calcTotals();
+    const selected = collectSelectedOptions();
+    const customer = state.customer || {};
+    const configId = state.configId || "DRAFT";
+    const today = new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+
+    const esc = escapeHtml;
+
+    let html = "";
+
+    // Header
+    html += `
+      <div class="pv-header">
+        <div>
+          <div class="pv-dealer-name">YachtCreators</div>
+          <div class="pv-dealer-meta">
+            2890 Marina Mile Road, Suite 103<br>
+            Fort Lauderdale, FL 33312<br>
+            +1 (954) 650 7353 · hello@YachtCreators.com
+          </div>
+        </div>
+        <div class="pv-config-meta">
+          <div>Configuration <strong>${esc(configId)}</strong></div>
+          <div>${esc(today)}</div>
+          <div>Powered by YachtWay</div>
+        </div>
+      </div>
+    `;
+
+    // Title and tagline
+    html += `
+      <h1 class="pv-title">Focus 3X</h1>
+      <p class="pv-tagline">Convertible day cruiser with an electric glass hardtop, a full walkaround deck, and a transformer swim platform. Built in Croatia. Model year 2026.</p>
+    `;
+
+    // Customer and dealer blocks
+    html += `
+      <div class="pv-blocks">
+        <div class="pv-block">
+          <div class="pv-block-label">Prepared for</div>
+          <div class="pv-block-body">
+            ${customer.name ? `<div class="name">${esc(customer.name)}</div>` : `<div class="name" style="color: #999;">Customer details pending</div>`}
+            ${customer.email ? `<div>${esc(customer.email)}</div>` : ""}
+            ${customer.phone ? `<div>${esc(customer.phone)}</div>` : ""}
+            ${customer.nickname ? `<div style="margin-top: 4pt; font-style: normal; color: #555;">Vessel: ${esc(customer.nickname)}</div>` : ""}
+          </div>
+        </div>
+        <div class="pv-block">
+          <div class="pv-block-label">Prepared by</div>
+          <div class="pv-block-body">
+            <div class="name">YachtCreators</div>
+            <div>2890 Marina Mile Road, Suite 103</div>
+            <div>Fort Lauderdale, FL 33312</div>
+            <div>+1 (954) 650 7353</div>
+            <div>hello@YachtCreators.com</div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Base and standard equipment
+    html += `
+      <div class="pv-section-title">Base vessel, Sport trim</div>
+      <div class="pv-opt-row">
+        <div class="title"><strong>Focus 3X, Sport trim</strong></div>
+        <div class="price">${formatPrice(totals.base)}</div>
+      </div>
+      <div class="pv-cat-title">Standard equipment included</div>
+      <ul class="pv-std-list">
+        ${standardEquipment.map(s => `<li>${esc(s)}</li>`).join("")}
+      </ul>
+      <div class="pv-cat-title">United States delivery package, included</div>
+      <div style="font-size: 9.5pt; color: #333; line-height: 1.5;">
+        Ocean shipping to Fort Lauderdale and all applicable United States import duties are included in the base price. State sales tax, vessel documentation, and any tariffs in effect at time of import are not included.
+      </div>
+    `;
+
+    // Selected options grouped by category
+    const hasSelections = Object.keys(selected).length > 0;
+    if (hasSelections) {
+      html += `<div class="pv-section-title">Selected options</div>`;
+      Object.keys(selected).forEach(catKey => {
+        html += `<div class="pv-cat-title">${esc(categoryLabels[catKey] || catKey)}</div>`;
+        selected[catKey].forEach(opt => {
+          html += `
+            <div class="pv-opt-row">
+              <div class="title">${esc(opt.title)}${opt.qty > 1 ? ` <span class="qty">× ${opt.qty}</span>` : ""}</div>
+              <div class="price">${formatPrice(opt.price)}</div>
+            </div>
+          `;
+        });
+      });
+    }
+
+    // Custom options
+    if (state.customOptions.length > 0) {
+      html += `<div class="pv-section-title">Custom options, to be quoted</div>`;
+      state.customOptions.forEach(opt => {
+        html += `
+          <div class="pv-opt-row">
+            <div class="title">${esc(opt.title)}${opt.desc ? `<div style="font-size: 9pt; color: #555; margin-top: 2pt;">${esc(opt.desc)}</div>` : ""}</div>
+            <div class="price" style="color: #666;">Quoted separately</div>
+          </div>
+        `;
+      });
+    }
+
+    // Total
+    html += `
+      <div class="pv-total-block">
+        <div class="pv-total-label">Build total, ex custom options</div>
+        <div class="pv-total-amount">${formatPrice(totals.total)}</div>
+      </div>
+    `;
+
+    // Notes
+    if (state.notes && state.notes.trim().length > 0) {
+      html += `
+        <div class="pv-notes">
+          <div class="pv-notes-label">Customer notes</div>
+          <div>${esc(state.notes)}</div>
+        </div>
+      `;
+    }
+
+    // Signatures
+    html += `
+      <div class="pv-signatures">
+        <div class="pv-sig"><div class="pv-sig-label">Customer signature and date</div></div>
+        <div class="pv-sig"><div class="pv-sig-label">Dealer signature and date</div></div>
+      </div>
+    `;
+
+    // Footer
+    html += `
+      <div class="pv-disclaimer">
+        <div>Prices in United States Dollars. Specifications subject to change. This document is not a contract of sale.</div>
+        <div class="pv-wordmark">Powered by YachtWay</div>
+      </div>
+    `;
+
+    document.getElementById("print-view").innerHTML = html;
+  }
+
+  function exportPDF() {
+    buildPrintView();
+    // Short delay so the print view renders and fonts settle before the browser snapshots
+    setTimeout(() => {
+      window.print();
+    }, 100);
+  }
+
+  function exportPDFFromSuccess() {
+    closeCustomerModal();
+    exportPDF();
+  }
+
+  function resetBuild() {
+    state.selections = {};
+    state.quantities = {};
+    state.customOptions = [];
+    state.notes = "";
+    state.customer = null;
+    state.configId = null;
+    document.getElementById("notes-field").value = "";
+    document.getElementById("sb-link-url").textContent = "Save the build to generate a link";
+    document.getElementById("sb-link-unsaved").classList.remove("hidden");
+    document.getElementById("sb-share-label").textContent = "Customer link";
+    document.getElementById("sb-share-label").classList.remove("saved");
+    document.getElementById("config-id-top").textContent = "Pending";
+    document.getElementById("save-status").textContent = "Unsaved draft";
+    const copyBtn = document.getElementById("copy-btn");
+    copyBtn.disabled = true;
+    copyBtn.style.opacity = "0.4";
+    copyBtn.style.cursor = "not-allowed";
+    initState();
+    update();
+    updateNotesCount();
+    showToast("Build reset to Sport trim base");
+  }
+
+  function closeBanner() {
+    document.getElementById("welcome-banner").style.display = "none";
+  }
+
+  document.getElementById("notes-field").addEventListener("input", updateNotesCount);
+  document.getElementById("custom-title").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); addCustomOption(); } });
+  document.getElementById("custom-desc").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); addCustomOption(); } });
+
+  initState();
+  update();
+  updateNotesCount();
+</script>
+
+</body>
+</html>
